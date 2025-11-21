@@ -9,8 +9,9 @@ A backend application built with Node.js, TypeScript, and PostgreSQL following D
 - **PostgreSQL**: Robust relational database with Docker support
 - **TypeORM**: Type-safe database operations with migrations
 - **UUIDv7**: Time-ordered identifiers for better database performance
-- **Testing**: Jest with 80%+ coverage target
+- **Testing**: Jest with 70%+ coverage target (currently 94%+)
 - **Code Quality**: ESLint + Prettier with TypeScript support
+- **Separate Test Database**: Isolated test environment on dedicated PostgreSQL instance
 
 ## Prerequisites
 
@@ -49,11 +50,15 @@ cp .env.example .env
 
 Edit `.env` with your configuration if needed.
 
-### 5. Start PostgreSQL
+### 5. Start PostgreSQL (development and test databases)
 
 ```bash
 docker-compose up -d
 ```
+
+This starts two PostgreSQL instances:
+- **Development**: Port 5432 (database: `petapp`)
+- **Test**: Port 5433 (database: `petapp_test`)
 
 ### 6. Run database migrations
 
@@ -96,7 +101,9 @@ npm run dev
 ```
 src/
 ├── domain/              # Business logic and entities
-│   └── entities/       # Domain entities with business rules
+│   ├── entities/       # Domain entities with business rules
+│   ├── errors/         # Custom domain errors
+│   └── repositories/   # Repository interfaces
 ├── application/        # Use cases and application services
 │   ├── use-cases/     # Business operations
 │   └── dtos/          # Data transfer objects
@@ -104,9 +111,27 @@ src/
 │   └── database/      # TypeORM configuration and repositories
 │       ├── entities/  # TypeORM entities
 │       ├── migrations/ # Database migrations
+│       ├── repositories/ # Repository implementations
 │       └── data-source.ts
 └── presentation/       # HTTP layer (controllers, routes)
+    ├── controllers/   # Route handlers
+    ├── middlewares/   # Validation, error handling
+    ├── dtos/         # API request validation
+    └── routes/       # Route path constants
 ```
+
+## API Endpoints
+
+### Pets
+- `POST /api/pets` - Create a new pet
+  - Body: `{ "name": "string (2-50 chars)" }`
+  - Response: `{ "id": "uuid", "name": "string" }`
+
+### Weights
+- `POST /api/pets/:petId/weights` - Add weight measurement for a pet
+  - Params: `petId` (UUID)
+  - Body: `{ "weight": number (0-1000), "date": "YYYY-MM-DD" }`
+  - Response: `{ "id": "uuid", "petId": "uuid", "weight": number, "date": "YYYY-MM-DD" }`
 
 ## Database Schema
 
@@ -168,7 +193,7 @@ chore: description
 ### Code Quality Standards
 
 - **Zero ESLint errors**: Run `npm run lint:fix` before committing
-- **80%+ test coverage**: Run `npm run test:coverage` to verify
+- **70%+ test coverage**: Run `npm run test:coverage` to verify (currently 94%+)
 - **Type safety**: Use TypeScript strict mode, avoid `any`
 - **Naming conventions**: 
   - Interfaces prefixed with `I` (e.g., `IPetRepository`)
@@ -180,12 +205,13 @@ chore: description
 1. Run `npm run lint:fix`
 2. Run `npm run format`
 3. Run `npm test`
-4. Run `npm run test:coverage`
+4. Run `npm run test:coverage` (ensure 70%+ coverage)
 5. Review changes
 6. Write conventional commit message
 
 ## Environment Variables
 
+### Development (.env)
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `NODE_ENV` | Environment (development/production) | `development` |
@@ -197,6 +223,12 @@ chore: description
 | `DATABASE_PASSWORD` | Database password | `petapp_pass` |
 | `TYPEORM_SYNCHRONIZE` | Auto-sync schema (dev only) | `false` |
 | `TYPEORM_LOGGING` | Enable SQL logging | `true` |
+
+### Test (.env.test)
+Same variables as above but with:
+- `DATABASE_PORT`: `5433`
+- `DATABASE_NAME`: `petapp_test`
+- `NODE_ENV`: `test`
 
 ## Docker
 

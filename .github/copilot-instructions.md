@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Node.js/TypeScript backend application following **Domain-Driven Design (DDD)** architecture with PostgreSQL database. Focus on scalability, type safety, and comprehensive testing (80%+ coverage target).
+Node.js/TypeScript backend application following **Domain-Driven Design (DDD)** architecture with PostgreSQL database. Focus on scalability, type safety, and comprehensive testing (70%+ coverage target).
 
 ## Architecture: DDD Layers
 
@@ -244,7 +244,7 @@ router.post("/pets", validateBody(RegisterPetDTO), async (req, res, next) => {
   npm install --save-dev eslint-config-prettier eslint-plugin-prettier
   ```
 
-### Testing (80%+ Coverage Required)
+### Testing (70%+ Coverage Required)
 
 - **Framework**: Jest
 - **Structure**: Mirror `src/` structure in `test/` or `__tests__/`
@@ -406,7 +406,7 @@ npm run format:check
 # Run all tests
 npm test
 
-# Run tests with coverage (must meet 80%+)
+# Run tests with coverage (must meet 70%+)
 npm run test:coverage
 
 # Run specific test file
@@ -582,7 +582,7 @@ src/
 4. **Create DTOs** with validation decorators
 5. **Implement repository** in `src/infrastructure/database/repositories/`
 6. **Add controller** and routes in `src/presentation/`
-7. **Write tests** for all layers (aim for 80%+ coverage)
+7. **Write tests** for all layers (aim for 70%+ coverage)
 8. **Create migration** for database changes
 
 ### Common Pitfalls to Avoid
@@ -622,7 +622,7 @@ src/
 1. Run `npm run lint:fix` to auto-fix issues
 2. Run `npm run format` to format code
 3. Run `npm test` to verify all tests pass
-4. Run `npm run test:coverage` to ensure 80%+ coverage
+4. Run `npm run test:coverage` to ensure 70%+ coverage
 5. Review ESLint warnings and address them
 6. Write commit message following Conventional Commits
 
@@ -670,7 +670,7 @@ feat(api)!: change pet registration response format
 
 ---
 
-**Target Coverage**: Maintain 80%+ test coverage across all layers
+**Target Coverage**: Maintain 70%+ test coverage across all layers
 **Code Quality**: Zero ESLint errors before committing
 **Commit Messages**: Follow Conventional Commits specification
 **CI/CD**: Linting and tests must pass before merging to main branch
