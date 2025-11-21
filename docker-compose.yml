@@ -23,14 +23,14 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: petapp_test
-      POSTGRES_USER: petapp_user
-      POSTGRES_PASSWORD: petapp_pass
+      POSTGRES_USER: petapp_test
+      POSTGRES_PASSWORD: test_password
     ports:
       - '5433:5432'
     volumes:
       - postgres_test_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U petapp_user -d petapp_test']
+      test: ['CMD-SHELL', 'pg_isready -U petapp_test -d petapp_test']
       interval: 10s
       timeout: 5s
       retries: 5
