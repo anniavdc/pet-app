@@ -9,6 +9,38 @@ import { ROUTES } from '@presentation/routes';
 
 const router = Router();
 
+/**
+ * @swagger
+ * /api/pets:
+ *   post:
+ *     summary: Create a new pet
+ *     tags: [Pets]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreatePet'
+ *     responses:
+ *       201:
+ *         description: Pet created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Pet'
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalError'
+ */
 router.post(
   ROUTES.PETS.BASE,
   validateBody(CreatePetDTO),
