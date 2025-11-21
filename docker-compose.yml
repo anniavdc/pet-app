@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: petapp_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: petapp
+      POSTGRES_USER: petapp_user
+      POSTGRES_PASSWORD: petapp_pass
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U petapp_user -d petapp']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local

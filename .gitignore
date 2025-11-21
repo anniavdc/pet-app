@@ -1,0 +1,15 @@
+# Node.js
+node_modules/
+
+# TypeScript
+dist/
+*.tsbuildinfo
+
+# Testing
+coverage/
+
+# Environment variables
+.env
+
+# IDE
+.DS_Store
