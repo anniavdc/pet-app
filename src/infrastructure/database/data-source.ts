@@ -19,7 +19,7 @@ export const AppDataSource = new DataSource({
   password: getEnvOrThrow('DATABASE_PASSWORD'),
   database: getEnvOrThrow('DATABASE_NAME'),
   synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
-  logging: process.env.TYPEORM_LOGGING === 'true',
+  logging: process.env.NODE_ENV !== 'production' && process.env.TYPEORM_LOGGING === 'true',
   entities: [__dirname + '/entities/*.entity{.ts,.js}'],
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
   subscribers: [],
