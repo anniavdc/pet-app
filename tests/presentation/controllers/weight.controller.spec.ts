@@ -332,7 +332,7 @@ describe('Weight Controller - POST /api/pets/:petId/weights', () => {
       expect(response.body[2].weight).toBe(20.0);
       expect(response.body[2].date).toBe('2024-01-15');
       // Check all weights have proper structure
-      response.body.forEach((weight: any) => {
+      response.body.forEach((weight: { id: string; weight: number; date: string; petId: string }) => {
         expect(weight).toHaveProperty('id');
         expect(weight).toHaveProperty('weight');
         expect(weight).toHaveProperty('date');
