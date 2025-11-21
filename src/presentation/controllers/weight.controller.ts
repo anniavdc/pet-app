@@ -5,6 +5,7 @@ import { WeightEntity } from '@infrastructure/database/entities/weight.entity';
 import { TypeORMPetRepository } from '@infrastructure/database/repositories/typeorm-pet.repository';
 import { TypeORMWeightRepository } from '@infrastructure/database/repositories/typeorm-weight.repository';
 import { CreateWeightUseCase } from '@application/use-cases/create-weight.use-case';
+import { GetWeightsByPetIdUseCase } from '@application/use-cases/get-weights-by-pet-id.use-case';
 import { CreateWeightDTO } from '@application/dtos/create-weight.dto';
 import { validateBody, validateParams } from '@presentation/middlewares/validation.middleware';
 import { ROUTES } from '@presentation/routes';
@@ -78,6 +79,73 @@ router.post(
       const result = await useCase.execute(petId, req.body as CreateWeightDTO);
       
       res.status(201).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /api/pets/{petId}/weights:
+ *   get:
+ *     summary: Get all weight measurements for a pet
+ *     tags: [Weights]
+ *     parameters:
+ *       - in: path
+ *         name: petId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The pet ID
+ *         example: 018c8f8e-7b4a-7890-abcd-ef1234567890
+ *     responses:
+ *       200:
+ *         description: List of weight measurements (ordered by date descending)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Weight'
+ *       400:
+ *         description: Validation error (invalid petId format)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationError'
+ *       404:
+ *         description: Pet not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFoundError'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/InternalError'
+ */
+router.get(
+  ROUTES.PETS.WEIGHTS,
+  validateParams(PetIdParamDTO),
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const { petId } = req.params;
+      
+      const petRepository = new TypeORMPetRepository(
+        AppDataSource.getRepository(PetEntity)
+      );
+      const weightRepository = new TypeORMWeightRepository(
+        AppDataSource.getRepository(WeightEntity)
+      );
+      
+      const useCase = new GetWeightsByPetIdUseCase(weightRepository, petRepository);
+      const result = await useCase.execute(petId);
+      
+      res.status(200).json(result);
     } catch (error) {
       next(error);
     }

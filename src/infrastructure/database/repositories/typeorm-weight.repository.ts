@@ -21,7 +21,9 @@ export class TypeORMWeightRepository implements IWeightRepository {
   }
 
   private toDomain(entity: WeightEntity): Weight {
-    return new Weight(entity.id, entity.petId, entity.weight, entity.date);
+    // Convert date string to Date object if needed (PostgreSQL date type returns string)
+    const date = typeof entity.date === 'string' ? new Date(entity.date) : entity.date;
+    return new Weight(entity.id, entity.petId, entity.weight, date);
   }
 
   private toEntity(weight: Weight): WeightEntity {
