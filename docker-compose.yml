@@ -17,6 +17,26 @@ services:
       timeout: 5s
       retries: 5
 
+  postgres_test:
+    image: postgres:15-alpine
+    container_name: petapp_postgres_test
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: petapp_test
+      POSTGRES_USER: petapp_user
+      POSTGRES_PASSWORD: petapp_pass
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U petapp_user -d petapp_test']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   postgres_data:
+    driver: local
+  postgres_test_data:
     driver: local
