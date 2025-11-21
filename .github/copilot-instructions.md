@@ -12,6 +12,8 @@ Node.js/TypeScript backend application following **Domain-Driven Design (DDD)** 
 
 - **Entities**: Business objects with identity (e.g., `User`, `Pet`, `Appointment`)
   - Must have unique identifiers (id)
+  - Use UUIDv7 for all entity IDs (time-ordered, better performance)
+  - Provide static `create()` factory methods that auto-generate UUIDv7
   - Encapsulate business rules and validation
   - Example: `Pet` entity validates age, species, and ownership
 - **Value Objects**: Immutable objects without identity (e.g., `Email`, `Address`, `Money`)
@@ -21,29 +23,33 @@ Node.js/TypeScript backend application following **Domain-Driven Design (DDD)** 
 - **Repository Interfaces**: Define contracts for data persistence (implementations live in infrastructure)
 
 ```typescript
-// Example Domain Entity Pattern
+// Example Domain Entity Pattern with UUIDv7
+import { uuidv7 } from 'uuidv7';
+
 export class Pet {
   constructor(
-    private readonly id: string,
-    private name: string,
-    private readonly species: Species,
-    private birthDate: Date,
-    private ownerId: string
+    private readonly _id: string,
+    private _name: string
   ) {
     this.validate();
   }
 
+  static create(name: string): Pet {
+    return new Pet(uuidv7(), name);
+  }
+
   private validate(): void {
-    if (!this.name || this.name.length < 2) {
-      throw new DomainError("Pet name must be at least 2 characters");
-    }
-    if (this.getAge() < 0) {
-      throw new DomainError("Birth date cannot be in the future");
+    if (!this._name || this._name.length < 2) {
+      throw new DomainError('Pet name must be at least 2 characters');
     }
   }
 
-  getAge(): number {
-    // Business logic here
+  get id(): string {
+    return this._id;
+  }
+
+  get name(): string {
+    return this._name;
   }
 }
 ```
