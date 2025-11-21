@@ -34,7 +34,7 @@ export function validateParams<T extends object>(dtoClass: new () => T) {
       return next(new ValidationError(errorMessages));
     }
     
-    req.params = dtoInstance as Record<string, unknown>;
+    req.params = dtoInstance as Record<string, string>;
     next();
   };
 }
