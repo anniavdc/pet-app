@@ -2,7 +2,41 @@
 
 ## Project Overview
 
-Node.js/TypeScript backend application following **Domain-Driven Design (DDD)** architecture with PostgreSQL database. Focus on scalability, type safety, and comprehensive testing (70%+ coverage target).
+Node.js/TypeScript backend application following **Domain-Driven Design (DDD)** architecture with PostgreSQL database. Focus on scalability, type safety, and comprehensive testing (70%+ coverage target, currently 93.72%).
+
+## Current Implementation Status
+
+### Implemented Features
+- ✅ **Pet Management**: Create pets with validation (2-50 chars, no whitespace-only names)
+- ✅ **Weight Tracking**: Add and retrieve weight measurements for pets
+- ✅ **API Endpoints**:
+  - `POST /api/pets` - Create a new pet
+  - `POST /api/pets/:petId/weights` - Add weight measurement (0.01-1000kg, no future dates)
+  - `GET /api/pets/:petId/weights` - Retrieve weight history (ordered by date DESC)
+- ✅ **API Documentation**: Interactive Swagger/OpenAPI at `/api-docs`
+- ✅ **Database**: PostgreSQL with TypeORM, migrations, separate test database (port 5433)
+- ✅ **Testing**: 65 tests passing, 93.72% coverage
+- ✅ **Validation**: class-validator for DTOs, domain validation in entities
+- ✅ **Error Handling**: Custom domain errors with proper HTTP status codes
+
+### Database Schema
+```
+Pet Table:
+- id (uuid PK, UUIDv7)
+- name (varchar, 2-50 chars)
+
+Weight Table:
+- id (uuid PK, UUIDv7)
+- pet_id (uuid FK → Pet.id, CASCADE on delete)
+- weight (float, 0.01-1000)
+- date (date, no future dates)
+```
+
+### Security Notes
+- **Never expose actual credentials in README or documentation**
+- Use placeholder examples like `your_db_name`, `your_secure_password`
+- Database credentials are in `.env` and `.env.test` (gitignored)
+- Docker Compose contains default dev credentials (acceptable for local dev only)
 
 ## Architecture: DDD Layers
 
@@ -670,7 +704,8 @@ feat(api)!: change pet registration response format
 
 ---
 
-**Target Coverage**: Maintain 70%+ test coverage across all layers
+**Target Coverage**: Maintain 70%+ test coverage across all layers (currently 93.72%)
 **Code Quality**: Zero ESLint errors before committing
 **Commit Messages**: Follow Conventional Commits specification
 **CI/CD**: Linting and tests must pass before merging to main branch
+**Security**: Never commit actual database credentials - use placeholders in documentation
