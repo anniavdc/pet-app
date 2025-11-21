@@ -1,4 +1,5 @@
 import { uuidv7 } from 'uuidv7';
+import { DomainError } from '@domain/errors';
 
 export class Pet {
   constructor(
@@ -13,11 +14,11 @@ export class Pet {
   }
 
   private validate(): void {
-    if (!this._name || this._name.trim().length === 0) {
-      throw new Error('Pet name cannot be empty');
+    if (!this._name || this._name.trim().length < 1) {
+      throw new DomainError('Pet name is required');
     }
     if (this._name.length > 255) {
-      throw new Error('Pet name cannot exceed 255 characters');
+      throw new DomainError('Pet name cannot exceed 255 characters');
     }
   }
 

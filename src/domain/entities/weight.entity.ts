@@ -1,4 +1,5 @@
 import { uuidv7 } from 'uuidv7';
+import { DomainError } from '@domain/errors';
 
 export class Weight {
   constructor(
@@ -16,13 +17,13 @@ export class Weight {
 
   private validate(): void {
     if (this._weight <= 0) {
-      throw new Error('Weight must be greater than 0');
+      throw new DomainError('Weight must be greater than 0');
     }
     if (this._weight > 1000) {
-      throw new Error('Weight cannot exceed 1000 kg');
+      throw new DomainError('Weight cannot exceed 1000 kg');
     }
     if (this._date > new Date()) {
-      throw new Error('Weight date cannot be in the future');
+      throw new DomainError('Weight date cannot be in the future');
     }
   }
 
