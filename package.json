@@ -16,8 +16,11 @@
         "test:coverage": "jest --coverage",
         "migration:create": "typeorm migration:create",
         "migration:run": "npm run build && typeorm migration:run -d dist/infrastructure/database/data-source.js",
+        "migration:run:test": "npm run build && NODE_ENV=test typeorm migration:run -d dist/infrastructure/database/data-source.js",
         "migration:revert": "npm run build && typeorm migration:revert -d dist/infrastructure/database/data-source.js",
-        "schema:drop": "npm run build && typeorm schema:drop -d dist/infrastructure/database/data-source.js"
+        "migration:revert:test": "npm run build && NODE_ENV=test typeorm migration:revert -d dist/infrastructure/database/data-source.js",
+        "schema:drop": "npm run build && typeorm schema:drop -d dist/infrastructure/database/data-source.js",
+        "schema:drop:test": "npm run build && NODE_ENV=test typeorm schema:drop -d dist/infrastructure/database/data-source.js"
     },
     "keywords": [
         "ddd",
