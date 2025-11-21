@@ -9,7 +9,7 @@ describe('Pet Controller - POST /api/pets', () => {
   let app: Application;
 
   beforeAll(async () => {
-    // Initialize database connection
+    // Initialize database connection if not already initialized
     if (!AppDataSource.isInitialized) {
       await AppDataSource.initialize();
     }
@@ -19,12 +19,6 @@ describe('Pet Controller - POST /api/pets', () => {
     app.use(express.json());
     app.use('/api', petController);
     app.use(errorHandler);
-  });
-
-  afterAll(async () => {
-    if (AppDataSource.isInitialized) {
-      await AppDataSource.destroy();
-    }
   });
 
   beforeEach(async () => {

@@ -13,7 +13,6 @@ describe('CreateWeightUseCase', () => {
 
   beforeEach(() => {
     mockWeightRepository = {
-      findById: jest.fn(),
       findByPetId: jest.fn(),
       save: jest.fn(),
     };
