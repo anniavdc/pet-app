@@ -9,7 +9,8 @@ A backend application built with Node.js, TypeScript, and PostgreSQL following D
 - **PostgreSQL**: Robust relational database with Docker support
 - **TypeORM**: Type-safe database operations with migrations
 - **UUIDv7**: Time-ordered identifiers for better database performance
-- **Testing**: Jest with 70%+ coverage target (currently 94%+)
+- **Testing**: Jest with 70%+ coverage target (currently 93.72%)
+- **Swagger/OpenAPI**: Interactive API documentation at `/api-docs`
 - **Code Quality**: ESLint + Prettier with TypeScript support
 - **Separate Test Database**: Isolated test environment on dedicated PostgreSQL instance
 
@@ -72,6 +73,10 @@ npm run migration:run
 npm run dev
 ```
 
+The server will start on http://localhost:3000 with:
+- API endpoints at `/api/*`
+- Interactive Swagger documentation at http://localhost:3000/api-docs
+
 ## Available Scripts
 
 ### Development
@@ -122,6 +127,12 @@ src/
 
 ## API Endpoints
 
+### API Documentation
+
+Interactive Swagger/OpenAPI documentation is available at:
+- **URL**: http://localhost:3000/api-docs
+- **Features**: Test endpoints directly from the browser with automatic request/response validation
+
 ### Pets
 - `POST /api/pets` - Create a new pet
   - Body: `{ "name": "string (2-50 chars)" }`
@@ -130,8 +141,14 @@ src/
 ### Weights
 - `POST /api/pets/:petId/weights` - Add weight measurement for a pet
   - Params: `petId` (UUID)
-  - Body: `{ "weight": number (0-1000), "date": "YYYY-MM-DD" }`
+  - Body: `{ "weight": number (0.01-1000), "date": "YYYY-MM-DD" }`
   - Response: `{ "id": "uuid", "petId": "uuid", "weight": number, "date": "YYYY-MM-DD" }`
+
+- `GET /api/pets/:petId/weights` - Get all weight measurements for a pet
+  - Params: `petId` (UUID)
+  - Response: `[{ "id": "uuid", "petId": "uuid", "weight": number, "date": "YYYY-MM-DD" }]`
+  - Returns weights ordered by date descending (most recent first)
+  - Returns empty array if pet has no weight measurements
 
 ## Database Schema
 
@@ -193,7 +210,7 @@ chore: description
 ### Code Quality Standards
 
 - **Zero ESLint errors**: Run `npm run lint:fix` before committing
-- **70%+ test coverage**: Run `npm run test:coverage` to verify (currently 94%+)
+- **70%+ test coverage**: Run `npm run test:coverage` to verify (currently 93.72%)
 - **Type safety**: Use TypeScript strict mode, avoid `any`
 - **Naming conventions**: 
   - Interfaces prefixed with `I` (e.g., `IPetRepository`)
@@ -212,23 +229,28 @@ chore: description
 ## Environment Variables
 
 ### Development (.env)
-| Variable | Description | Default |
+| Variable | Description | Example |
 |----------|-------------|---------|
 | `NODE_ENV` | Environment (development/production) | `development` |
 | `PORT` | Application port | `3000` |
 | `DATABASE_HOST` | PostgreSQL host | `localhost` |
 | `DATABASE_PORT` | PostgreSQL port | `5432` |
-| `DATABASE_NAME` | Database name | `petapp` |
-| `DATABASE_USER` | Database user | `petapp_user` |
-| `DATABASE_PASSWORD` | Database password | `petapp_pass` |
+| `DATABASE_NAME` | Database name | `your_db_name` |
+| `DATABASE_USER` | Database user | `your_db_user` |
+| `DATABASE_PASSWORD` | Database password | `your_secure_password` |
 | `TYPEORM_SYNCHRONIZE` | Auto-sync schema (dev only) | `false` |
 | `TYPEORM_LOGGING` | Enable SQL logging | `true` |
 
 ### Test (.env.test)
 Same variables as above but with:
 - `DATABASE_PORT`: `5433`
-- `DATABASE_NAME`: `petapp_test`
+- `DATABASE_NAME`: `your_test_db_name`
 - `NODE_ENV`: `test`
+
+**Note**: 
+- `.env` should never be committed (contains sensitive dev credentials)
+- `.env.test` is committed to the repository (test infrastructure configuration, loaded by `tests/setup.ts`)
+- Use `.env.example` as a template for local `.env` setup
 
 ## Docker
 

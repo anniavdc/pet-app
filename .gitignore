@@ -9,7 +9,9 @@ dist/
 coverage/
 
 # Environment variables
+# Environment variables
 .env
+# .env.test is committed (used by test setup)
 
 # IDE
 .DS_Store

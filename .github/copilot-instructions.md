@@ -35,7 +35,8 @@ Weight Table:
 ### Security Notes
 - **Never expose actual credentials in README or documentation**
 - Use placeholder examples like `your_db_name`, `your_secure_password`
-- Database credentials are in `.env` and `.env.test` (gitignored)
+- `.env` contains sensitive dev credentials (gitignored, never commit)
+- `.env.test` contains test infrastructure config (committed, loaded by tests/setup.ts)
 - Docker Compose contains default dev credentials (acceptable for local dev only)
 
 ## Architecture: DDD Layers
